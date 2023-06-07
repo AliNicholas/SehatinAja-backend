@@ -1,18 +1,7 @@
-const express = require("express");
 const axios = require("axios");
-const admin = require("firebase-admin");
+const { app, admin } = require("../config/firebase");
 
-const serviceAccount = require("../sehatinaja-c7205-firebase-adminsdk-2t2ec-570625c6a9.json");
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
-
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// register
-app.post("/register", (req, res) => {
+function register(req, res) {
   const userData = {
     email: req.body.email,
     password: req.body.password,
@@ -33,10 +22,9 @@ app.post("/register", (req, res) => {
       console.log("Error creating new user:", error);
       res.status(500).send("Error fetching user data");
     });
-});
+}
 
-// login
-app.post("/login", (req, res) => {
+function login(req, res) {
   const { email, password } = req.body;
 
   // Validasi input
@@ -62,7 +50,11 @@ app.post("/login", (req, res) => {
       console.error("Error logging in:", error);
       res.status(400).json({ error: "Failed to login" });
     });
-});
+}
+
+// logout
+
+// deleteAccount
 
 // get user
 app.get("/users", (req, res) => {
@@ -120,7 +112,4 @@ app.delete("/users", (req, res) => {
     });
 });
 
-const PORT = 8080;
-app.listen(PORT, () => {
-  console.log(`Server running on port : ${PORT}`);
-});
+module.exports = { register, login };
