@@ -65,6 +65,20 @@ app.post("/login", (req, res) => {
 });
 
 // get user
+app.get("/users", (req, res) => {
+  const { email, password } = req.body;
+  admin
+    .auth()
+    .getUserByEmail(email)
+    .then((userRecord) => {
+      const uid = userRecord.uid;
+      console.log("UID pengguna:", uid);
+      // Lakukan sesuatu dengan UID pengguna
+    })
+    .catch((error) => {
+      console.log("Error mengambil UID pengguna:", error);
+    });
+});
 
 // update user berdasarkan uid
 app.post("/users", (req, res) => {

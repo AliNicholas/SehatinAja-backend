@@ -11,8 +11,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// doctor
-app.get("/", (req, res) => {
+/// ambil kategori dokter ///
+app.get("/doctors", (req, res) => {
   console.log("");
 });
 
