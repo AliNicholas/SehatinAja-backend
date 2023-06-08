@@ -1,17 +1,22 @@
-const { initializeApp } = require("firebase/app");
 const admin = require("firebase-admin");
-const serviceAccount = require("../../credentials/Service_account_key.json");
-const config = require("../../credentials/firebaseConfig.json");
+const firebase = require("firebase/app");
+require("firebase/auth");
+
+const serviceAccount = require("../../credentials/firebaseServiceAccount.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-const firebaseConfig = config;
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+firebase.initializeApp({
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+});
 
 const db = admin.firestore();
 
-module.exports = { app, admin };
+module.exports = {
+  admin,
+  firebase,
+};
