@@ -8,16 +8,30 @@ function getDoctorCategoryById(req, res) {}
 
 function updateDoctorCategoryById(req, res) {}
 
-function delteDoctorCategoryById(req, res) {}
+function deleteDoctorCategoryById(req, res) {}
+
+function getAllDoctorsInCategory(req, res) {}
 
 function addDoctor(req, res) {}
 
 function getAllDoctors(req, res) {}
 
-function getDoctorDetailById(req, res) {}
+function getDoctorById(req, res) {}
 
 function updateDoctorById(req, res) {}
 
 function deleteDoctorById(req, res) {}
 
-module.exports = { getDoctorCategories };
+module.exports = {
+  addDoctorCategory,
+  getAllDoctorCategories,
+  getDoctorCategoryById,
+  updateDoctorCategoryById,
+  deleteDoctorCategoryById,
+  getAllDoctorsInCategory,
+  addDoctor,
+  getAllDoctors,
+  getDoctorById,
+  updateDoctorById,
+  deleteDoctorById,
+};

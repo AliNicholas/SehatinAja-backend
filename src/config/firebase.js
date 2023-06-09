@@ -19,4 +19,5 @@ const db = admin.firestore();
 module.exports = {
   admin,
   firebase,
+  db,
 };

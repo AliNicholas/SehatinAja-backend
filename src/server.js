@@ -1,8 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const authRoute = require("./routes/authRoute");
-// const usersRoutes = require("./routes/users");
-// const diseasesRoutes
+const diseaseRoute = require("./routes/diseaseRoute");
+const doctorRoute = require("./routes/doctorRoute");
+const testRoute = require("./routes/testRoute");
 
 const app = express();
 app.use(express.json());
@@ -12,9 +13,9 @@ app.get("/", (req, res) => {
 });
 
 app.use(authRoute);
-// app.use(usersRoutes);
-// app.use(diseasesRoutes);
-// app.use(doctorsRoutes);
+app.use(diseaseRoute);
+app.use(doctorRoute);
+app.use("/tests", testRoute);
 
 app.use((err, req, res, next) => {
   // err handling

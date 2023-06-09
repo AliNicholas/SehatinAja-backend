@@ -42,7 +42,8 @@ async function login(req, res) {
       .signInWithEmailAndPassword(email, password);
     res.json({
       message: "success login",
-      userRecord,
+      uid: userRecord.user.uid,
+      accessToken: userRecord,
     });
   } catch (error) {
     console.error(error);
