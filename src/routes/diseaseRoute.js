@@ -19,11 +19,11 @@ router.get("/disease-categories", getAllDiseaseCategories);
 router.get("/disease-categories/:id", getDiseaseCategoryById);
 router.put("/disease-categories/:id", updateDiseaseCategoryById);
 router.delete("/disease-categories/:id", deleteDiseaseCategoryById);
-router.get("/disease-categories/:id/diseases", getAllDiseasesInCategory);
 router.post("/diseases", addDisease);
 router.get("/diseases", getAllDiseases);
-router.get("/diseases/:id", getDiseaseById);
-router.delete("/diseases/:id", updateDiseaseById);
-router.put("/diseases/:id", deleteDiseaseById);
+router.get("/diseases/:categoryId/:diseaseId", getDiseaseById);
+router.put("/diseases/:categoryId/:diseaseId", updateDiseaseById);
+router.delete("/diseases/:categoryId/:diseaseId", deleteDiseaseById);
+router.get("/disease-categories/:id/diseases", getAllDiseasesInCategory);
 
 module.exports = router;
