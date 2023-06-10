@@ -19,11 +19,11 @@ router.get("/doctor-categories", getAllDoctorCategories);
 router.get("/doctor-categories/:id", getDoctorCategoryById);
 router.put("/doctor-categories/:id", updateDoctorCategoryById);
 router.delete("/doctor-categories/:id", deleteDoctorCategoryById);
-router.get("/doctor-categories/:id/doctors", getAllDoctorsInCategory);
 router.post("/doctors", addDoctor);
 router.get("/doctors", getAllDoctors);
-router.get("/doctors/:id", getDoctorById);
-router.delete("/doctors/:id", updateDoctorById);
-router.put("/doctors/:id", deleteDoctorById);
+router.get("/doctors/:categoryId/:doctorId", getDoctorById);
+router.delete("/doctors/:categoryId/:doctorId", updateDoctorById);
+router.put("/doctors/:categoryId/:doctorId", deleteDoctorById);
+router.get("/doctors/:categoryId", getAllDoctorsInCategory);
 
 module.exports = router;

@@ -60,7 +60,7 @@ async function getDiseaseCategoryById(req, res) {
       };
       res.status(200).json(category);
     } else {
-      res.status(404).json({ error: `Disease category not found.` });
+      res.status(404).json({ error: `Category not found.` });
     }
   } catch (error) {
     console.error(error);
@@ -83,7 +83,7 @@ async function updateDiseaseCategoryById(req, res) {
         }' category updated to '${categoryName}'.`,
       });
     } else {
-      res.status(404).json({ error: `'${id}' category not found.` });
+      res.status(404).json({ error: `'${categoryName}' category not found.` });
     }
   } catch (error) {
     console.error(error);
@@ -134,13 +134,9 @@ async function addDisease(req, res) {
           .status(400)
           .json({ error: `'${diseaseData.name}' already exists.` });
       } else {
-        // Membuat referensi dokumen di dalam subkoleksi "diseases" dengan menggunakan categoryId
         const docRef = diseasesCollectionRef.doc();
 
-        // Menyimpan diseaseData ke dalam dokumen yang baru dibuat
         await docRef.set(diseaseData);
-
-        // Mengirim respons dengan status 200 dan pesan sukses
         res.status(201).json({ message: "Disease added successfully." });
       }
     }
@@ -244,23 +240,35 @@ async function deleteDiseaseById(req, res) {
   }
 }
 
-//belum selesai
 async function getAllDiseasesInCategory(req, res) {
   try {
-    const { id } = req.params;
-    const snapshot = await db
-      .collection("diseaseCategories")
-      .doc(id)
-      .collection("diseases")
-      .get();
+    const { categoryId } = req.params;
+    const categoryRef = db.collection("diseaseCategories").doc(categoryId);
+    const categorySnapshot = await categoryRef.get();
+
+    if (!categorySnapshot.exists) {
+      return res.status(404).json({ error: "Category not found." });
+    }
+
+    const categoryName = categorySnapshot.data().categoryName;
+
+    const snapshot = await categoryRef.collection("diseases").get();
     const diseases = [];
     snapshot.forEach((doc) => {
       const disease = {
         id: doc.id,
-        ...doc.data(),
+        name: doc.data().name,
+        message: doc.data().message,
+        caused: doc.data().caused,
+        prevention: doc.data().prevention,
       };
+      diseases.push(disease);
     });
-    res.status(200).json(diseases);
+    const result = {
+      categoryName: categoryName,
+      diseases: diseases,
+    };
+    res.status(200).json(result);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Something went wrong." });

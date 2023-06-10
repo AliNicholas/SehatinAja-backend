@@ -24,6 +24,6 @@ router.get("/diseases", getAllDiseases);
 router.get("/diseases/:categoryId/:diseaseId", getDiseaseById);
 router.put("/diseases/:categoryId/:diseaseId", updateDiseaseById);
 router.delete("/diseases/:categoryId/:diseaseId", deleteDiseaseById);
-router.get("/disease-categories/:id/diseases", getAllDiseasesInCategory);
+router.get("/diseases/:categoryId", getAllDiseasesInCategory);
 
 module.exports = router;
