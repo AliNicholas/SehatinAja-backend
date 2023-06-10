@@ -1,3 +1,27 @@
-options:
-  logging:
-    gcsLogPath: gs://sehatinaja-c7205-logs
+steps:
+  # Step 1: Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-t"
+      - "gcr.io/sehatinaja-c7205/gcr.io/sehatinaja-c7205/sehatinaja"
+      - "."
+
+  # Step 2: Push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "push"
+      - "gcr.io/sehatinaja-c7205/gcr.io/sehatinaja-c7205/sehatinaja"
+
+  # Step 3: Deploy the container image to Cloud Run (optional, adjust as needed)
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      - "run"
+      - "deploy"
+      - "sehatinaja"
+      - "--image"
+      - "gcr.io/sehatinaja-c7205/gcr.io/sehatinaja-c7205/sehatinaja"
+      - "--platform"
+      - "managed"
+      - "--region"
+      - "us-central1"
