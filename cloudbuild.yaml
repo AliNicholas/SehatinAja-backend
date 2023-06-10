@@ -1,1 +1,3 @@
-"options": { "logsBucket": "gs://nama-bucket-anda" }
+options:
+  logging:
+    gcsLogPath: gs://sehatinaja-c7205-logs
