@@ -1,11 +1,13 @@
-FROM nodejs:latest
+FROM google/cloud-sdk:slim as builder
+WORKDIR /app
+COPY . /app
+RUN gsutil cp gs://sehatinaja-c7205/credentials/firebaseServiceAccount.json /app/credentials/firebaseServiceAccount.json
+RUN gsutil cp gs://sehatinaja-c7205/.env /app/.env
 
-COPY /src /src
 
-WORKDIR /server
-
-ENV MODEL_BASE_PATH=/models
-ENV MODEL_NAME=SavedModel
-
-# CMD npm install
-CMD npm start
+FROM node
+WORKDIR /app
+COPY --from=builder /app /app
+RUN npm install
+EXPOSE 8080
+CMD node src/server.js

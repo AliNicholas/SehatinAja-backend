@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 app.use(authRoute);
 app.use(diseaseRoute);
 app.use(doctorRoute);
-app.use("/tests", testRoute);
+app.use(testRoute);
 
 app.use((err, req, res, next) => {
   // err handling
