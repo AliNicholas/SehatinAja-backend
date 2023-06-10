@@ -4,14 +4,14 @@ steps:
     args:
       - "build"
       - "-t"
-      - "gcr.io/sehatinaja-c7205/gcr.io/sehatinaja-c7205/sehatinaja"
+      - "gcr.io/sehatinaja-c7205/sehatinaja"
       - "."
 
-  # Step 2: Push the container image to Container Registry
+  # # Step 2: Push the container image to Container Registry
   - name: "gcr.io/cloud-builders/docker"
     args:
       - "push"
-      - "gcr.io/sehatinaja-c7205/gcr.io/sehatinaja-c7205/sehatinaja"
+      - "gcr.io/sehatinaja-c7205/sehatinaja"
 
   # Step 3: Deploy the container image to Cloud Run (optional, adjust as needed)
   - name: "gcr.io/cloud-builders/gcloud"
@@ -20,7 +20,7 @@ steps:
       - "deploy"
       - "sehatinaja"
       - "--image"
-      - "gcr.io/sehatinaja-c7205/gcr.io/sehatinaja-c7205/sehatinaja"
+      - "gcr.io/sehatinaja-c7205/sehatinaja"
       - "--platform"
       - "managed"
       - "--region"
