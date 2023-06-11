@@ -14,7 +14,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Get firebase service account
-        run: echo "$FIREBASESERVICEACCOUNT" > app/credentials/firebaseServiceAccount.json
+        run: |
+          mkdir -p app/credentials
+          echo "$FIREBASESERVICEACCOUNT" > app/credentials/firebaseServiceAccount.json
       - name: Get Firebase config file
         run: echo "$FIREBASEAPP" > app/.env
       - name: Build the Docker image
