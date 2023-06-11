@@ -13,6 +13,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
       - name: Get firebase service account
         run: |
           mkdir -p app/credentials
@@ -36,9 +41,9 @@ jobs:
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
 
-        env:
-          PROJECT_ID: ${{secrets.PROJECT_ID}}
-          SERVICE: ${{ secrets.SERVICE_NAME }}
-          REGION: ${{ secrets.SERVICE_REGION }}
-          FIREBASESERVICEACCOUNT: ${{ secrets.FIREBASESERVICEACCOUNT }}
-          FIREBASEAPP: ${{ secrets.FIREBASEAPP }}
+env:
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  SERVICE: ${{ secrets.SERVICE_NAME }}
+  REGION: ${{ secrets.SERVICE_REGION }}
+  FIREBASESERVICEACCOUNT: ${{ secrets.FIREBASESERVICEACCOUNT }}
+  FIREBASEAPP: ${{ secrets.FIREBASEAPP }}
