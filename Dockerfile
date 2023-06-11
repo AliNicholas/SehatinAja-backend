@@ -1,8 +1,10 @@
 FROM google/cloud-sdk:slim as builder
 WORKDIR /app
 COPY . /app
-RUN gsutil cp https://storage.cloud.google.com/sehatinaja-c7205/.env /app/credentials/firebaseServiceAccount.json
-RUN gsutil cp https://storage.cloud.google.com/sehatinaja-c7205/credentials/firebaseServiceAccount.json /app/.env
+COPY secrets.ENV /app/.env
+COPY secrets.firebaseServiceAccount /app/credentials/firebaseServiceAccount.json
+# RUN gsutil cp https://storage.cloud.google.com/sehatinaja-c7205/.env /app/credentials/firebaseServiceAccount.json
+# RUN gsutil cp https://storage.cloud.google.com/sehatinaja-c7205/credentials/firebaseServiceAccount.json /app/.env
 
 FROM node
 WORKDIR /app
