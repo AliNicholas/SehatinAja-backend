@@ -1,0 +1,40 @@
+name: Build and Deploy to Cloud Run
+
+on:
+  push:
+    branches: ["master"]
+
+env:
+  PROJECT_ID: ${{secrets.PROJECT_ID}}
+  SERVICE: ${{ secrets.SERVICE_NAME }}
+  REGION: ${{ secrets.SERVICE_REGION }}
+
+jobs:
+  deploy:
+    permissions:
+      contents: "read"
+      id-token: "write"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get Cloud Storage config file
+        run: echo "${{ secrets.FIREBASESERVICEACCOUNT }}" > app/credentials/firebaseServiceAccount.json
+      - name: Get Firebase config file
+        run: echo "${{ secrets.ENV }}" > app/.env
+      - name: Build the Docker image
+        run: |
+          docker build . \
+            --file Dockerfile \
+            --tag sehatinaja:$(date +%s) \
+            --build-arg firebaseServiceAccount="$(cat app/credentials/firebaseServiceAccount.json)" \
+            --build-arg env="$(cat app/.env)"
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v0
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          source: ./
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}

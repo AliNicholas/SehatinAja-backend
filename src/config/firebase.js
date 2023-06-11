@@ -2,7 +2,8 @@ const admin = require("firebase-admin");
 const firebase = require("firebase/app");
 require("firebase/auth");
 
-const serviceAccount = require("../../credentials/firebaseServiceAccount.json");
+// const serviceAccount = require("../../credentials/firebaseServiceAccount.json");
+const serviceAccount = secrets.FIREBASESERVICEACCOUNT;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
