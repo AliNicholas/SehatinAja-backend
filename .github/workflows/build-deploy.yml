@@ -4,13 +4,6 @@ on:
   push:
     branches: ["coba-deploy"]
 
-env:
-  PROJECT_ID: ${{secrets.PROJECT_ID}}
-  SERVICE: ${{ secrets.SERVICE_NAME }}
-  REGION: ${{ secrets.SERVICE_REGION }}
-  FIREBASESERVICEACCOUNT: ${{ secrets.FIREBASESERVICEACCOUNT }}
-  FIREBASEAPP: ${{ secrets.FIREBASEAPP }}
-
 jobs:
   deploy:
     permissions:
@@ -40,3 +33,10 @@ jobs:
           source: ./
       - name: Show Output
         run: echo ${{ steps.deploy.outputs.url }}
+
+        env:
+          PROJECT_ID: ${{secrets.PROJECT_ID}}
+          SERVICE: ${{ secrets.SERVICE_NAME }}
+          REGION: ${{ secrets.SERVICE_REGION }}
+          FIREBASESERVICEACCOUNT: ${{ secrets.FIREBASESERVICEACCOUNT }}
+          FIREBASEAPP: ${{ secrets.FIREBASEAPP }}
