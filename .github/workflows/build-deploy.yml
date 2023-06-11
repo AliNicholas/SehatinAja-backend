@@ -21,7 +21,7 @@ jobs:
       - name: Get Cloud Storage config file
         run: echo "${{ secrets.FIREBASESERVICEACCOUNT }}" > app/credentials/firebaseServiceAccount.json
       - name: Get Firebase config file
-        run: echo "${{ secrets.ENV }}" > app/.env
+        run: echo "${{ secrets.FIREBASEAPP }}" > app/.env
       - name: Build the Docker image
         run: |
           docker build . \
