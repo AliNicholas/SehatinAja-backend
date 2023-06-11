@@ -3,6 +3,8 @@ WORKDIR /app
 COPY . /app
 RUN gsutil cp gs://sehatinaja-c7205/credentials/firebaseServiceAccount.json /app/credentials/firebaseServiceAccount.json
 RUN gsutil cp gs://sehatinaja-c7205/.env /app/.env
+ENTRYPOINT ["--logging", "CLOUD_LOGGING_ONLY"]
+# ENTRYPOINT ["python3", "my-command.py", "--logging", "CLOUD_LOGGING_ONLY"]
 
 
 FROM node
