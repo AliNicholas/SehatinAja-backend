@@ -11,6 +11,7 @@ env:
   REGION: asia-southeast2
   IMAGE_NAME: gcr.io/sehatinaja-c7205/sehatinaja
   FIREBASESERVICEACCOUNT: ${{ secrets.FIREBASESERVICEACCOUNT }}
+  MY_ENV: ${{ secrets.MY_ENV }}
 
 jobs:
   deploy:
@@ -29,10 +30,14 @@ jobs:
         with:
           credentials_json: "${{ secrets.GH_ACTIONS_KEY }}"
 
+      - name: Create credentials directory
+        run: mkdir -p /credentials
+
       - name: Copy firebase service account
-        env:
-          FIREBASESERVICEACCOUNT: ${{ secrets.FIREBASESERVICEACCOUNT}}
-        run: cp $FIREBASESERVICEACCOUNT app/credentials/firebaseServiceAccount.json
+        run: cp ${{ env.FIREBASESERVICEACCOUNT }} /credentials/firebaseServiceAccount.json
+
+      - name: Copy .env file
+        run: cp ${{ env.MY_ENV }} .env
 
       - name: Build and Push Container
         run: |-

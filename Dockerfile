@@ -3,8 +3,8 @@ WORKDIR /app
 COPY . /app
 ARG firebaseServiceAccount
 ARG env
-# RUN gsutil cp https://storage.cloud.google.com/sehatinaja-c7205/.env /app/credentials/firebaseServiceAccount.json
-# RUN gsutil cp https://storage.cloud.google.com/sehatinaja-c7205/credentials/firebaseServiceAccount.json /app/.env
+COPY /credentials/f /app/credentials
+COPY .env /app/.env
 
 FROM node
 WORKDIR /app
