@@ -28,10 +28,10 @@ jobs:
         run: mkdir ./credentials
 
       - name: Copy firebase service account
-        run: cp ${{ env.FIREBASESERVICEACCOUNT }} credentials/firebaseServiceAccount.json
+        run: cp ${{ env.FIREBASESERVICEACCOUNT }} ./credentials/firebaseServiceAccount.json
 
       - name: Copy .env file
-        run: cp ${{ env.MY_ENV }} /github/workspace/.env
+        run: cp ${{ env.MY_ENV }} ./.env
 
       - name: Google Auth
         id: auth
