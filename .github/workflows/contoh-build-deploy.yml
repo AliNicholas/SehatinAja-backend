@@ -24,12 +24,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Google Auth
-        id: auth
-        uses: "google-github-actions/auth@v0"
-        with:
-          credentials_json: "${{ secrets.GH_ACTIONS_KEY }}"
-
       - name: Create credentials directory
         run: mkdir -p /credentials
 
@@ -38,6 +32,12 @@ jobs:
 
       - name: Copy .env file
         run: cp ${{ env.MY_ENV }} .env
+
+      - name: Google Auth
+        id: auth
+        uses: "google-github-actions/auth@v0"
+        with:
+          credentials_json: "${{ secrets.GH_ACTIONS_KEY }}"
 
       - name: Build and Push Container
         run: |-
