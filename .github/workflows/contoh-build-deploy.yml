@@ -24,11 +24,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # - name: Create credentials directory
-      #   run: mkdir -p /credentials
+      - name: Create credentials directory
+        run: mkdir ./credentials
 
       - name: Copy firebase service account
-        run: cp ${{ env.FIREBASESERVICEACCOUNT }} /github/workspace/credentials/firebaseServiceAccount.json
+        run: cp ${{ env.FIREBASESERVICEACCOUNT }} credentials/firebaseServiceAccount.json
 
       - name: Copy .env file
         run: cp ${{ env.MY_ENV }} /github/workspace/.env
