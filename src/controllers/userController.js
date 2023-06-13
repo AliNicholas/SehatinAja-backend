@@ -1,89 +1,114 @@
 const { admin, firebase } = require("../config/firebase");
 
 function getAllUsers(req, res) {
-  const listAllUsers = (nextPageToken) => {
-    // List batch of users, 1000 at a time.
-    getAuth()
-      .listUsers(1000, nextPageToken)
-      .then((listUsersResult) => {
-        listUsersResult.users.forEach((userRecord) => {
-          console.log("user", userRecord.toJSON());
-        });
-        if (listUsersResult.pageToken) {
-          // List next batch of users.
-          listAllUsers(listUsersResult.pageToken);
-        }
-      })
-      .catch((error) => {
-        console.log("Error listing users:", error);
+  admin
+    .auth()
+    .listUsers()
+    .then((userRecords) => {
+      const users = userRecords.users.map((user) => {
+        return {
+          uid: user.uid,
+          email: user.email,
+          name: user.displayName || null,
+          photoUrl: user.photoURL || null,
+        };
       });
-  };
-  // Start listing users from the beginning, 1000 at a time.
-  listAllUsers();
-}
-
-function getUserByUid(req, res) {
-  const uid = req.body.uid;
-  admin
-    .auth()
-    .getUser(uid)
-    .then((userRecord) => {
-      console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
-      res.json(userRecord.toJSON());
-    })
-    .catch((error) => {
-      console.log("Error fetching user data:", error);
-      res.status(500).send("Error fetching user data");
+      res.json({ users });
     });
+  console.error(error);
+  res.status(500).json({ error: "Something went wrong." });
 }
 
-function updateUserByUid(req, res) {
-  const userData = {
-    email: req.body.email,
-    password: req.body.password,
-    emailVerified: false,
-    disabled: false,
+async function getUserById(req, res) {
+  const { id } = req.params;
+
+  try {
+    const user = await admin.auth().getUser(id);
+
+    const userData = {
+      uid: user.uid,
+      email: user.email,
+      name: user.displayName,
+      photoUrl: user.photoURL,
+    };
+
+    res.json(userData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong." });
+  }
+}
+
+function updateUserById(req, res) {
+  const { email, password } = req.body;
+  const { id } = req.params;
+
+  const updateData = {
+    email,
+    password,
   };
 
   admin
     .auth()
-    .updateUser(uid, userData)
+    .updateUser(id, updateData) // Use 'id' instead of 'uid'
     .then((userRecord) => {
-      // See the UserRecord reference doc for the contents of userRecord.
       console.log("Successfully updated user", userRecord.toJSON());
-
-      res.json(userRecord.toJSON());
+      res.json("Updated");
     })
     .catch((error) => {
-      console.log("Error updating user:", error);
-      res.status(500).send("Error fetching user data");
+      console.error(error);
+      res.status(500).json({ error: "Something went wrong." });
     });
 }
 
-function deleteUserByUid(req, res) {
-  admin
-    .auth()
-    .deleteUser(uid)
-    .then(() => {
-      console.log("Successfully deleted user");
-    })
-    .catch((error) => {
-      console.log("Error deleting user:", error);
+async function uploadUserPhoto(req, res) {
+  const destination = `images/profile/${email}/${file.filename}`; // path to save in the bucket and the file name
+  const fileObject = cloudStorageConfig.bucket.file(destination);
+  const filePath = `./public/images/${file.filename}`; // path to acces images
+
+  try {
+    const options = {
+      metadata: {
+        contentType: file.mimetype,
+      },
+      predefinedAcl: "publicRead", // set public access control in Cloud SQL
+    };
+    // store photo to Cloud SQL
+    await new Promise((resolve, reject) => {
+      const readStream = fs.createReadStream(
+        `./public/images/${file.filename}`
+      );
+      const writeStream = fileObject.createWriteStream(options);
+
+      readStream.on("error", reject);
+      writeStream.on("error", reject);
+      writeStream.on("finish", resolve);
+
+      readStream.pipe(writeStream);
     });
+    // do delete file  in public/images directory after upload to Cloud SQL
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error(`Failed to delete file: ${err}`);
+      }
+    });
+    //  if success Get the public URL
+    const publicUrl = `https://storage.googleapis.com/${cloudStorageConfig.bucketName}/${destination}`;
+    const photoUrl = {
+      photoUrl: publicUrl,
+    };
+    // if success update user photoURL in firebase by firebase_uid
+    await firebaseConfig.admin.auth().updateUser(firebase_uid, photoUrl);
+    return publicUrl;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
 }
 
-function getUserByEmail(req, res) {
-  const email = req.body.email;
-  admin
-    .auth()
-    .getUserByEmail(email)
-    .then((userRecord) => {
-      console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
-      res.json(userRecord.toJSON());
-    })
-    .catch((error) => {
-      console.log("Error fetching user data:", error);
-      res.status(500).send("Error fetching user data");
-    });
-}
-//
+module.exports = {
+  getAllUsers,
+  getUserById,
+  updateUserById,
+  uploadUserPhoto,
+};

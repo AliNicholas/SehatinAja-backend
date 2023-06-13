@@ -1,12 +1,8 @@
-FROM google/cloud-sdk:slim as builder
+FROM node
 WORKDIR /app
 COPY . /app
 COPY /credentials/firebaseServiceAccount.json /app/credentials/firebaseServiceAccount.json
-COPY .env /app/.env
-
-FROM node
-WORKDIR /app
-COPY --from=builder /app /app
+COPY /credentials/cloud-storage.json /app/credentials/cloud-storage.json
 RUN npm install
 EXPOSE 8080
 CMD node src/server.js

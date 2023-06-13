@@ -40,10 +40,14 @@ async function login(req, res) {
     const userRecord = await firebase
       .auth()
       .signInWithEmailAndPassword(email, password);
+    const name = userRecord.user.displayName;
+    const userId = userRecord.user.uid;
+    const accessToken = await userRecord.user.getIdToken();
     res.json({
       message: "success login",
-      uid: userRecord.user.uid,
-      accessToken: userRecord,
+      name,
+      userId,
+      accessToken,
     });
   } catch (error) {
     console.error(error);
@@ -55,11 +59,10 @@ async function login(req, res) {
 }
 
 async function logout(req, res) {
-  const { uid } = req.body;
+  const { uid } = req.user;
 
   try {
-    await firebase.auth().signOut();
-
+    await admin.auth().revokeRefreshTokens(uid);
     res.json({
       message: "Successfully logged out",
       uid: uid,
@@ -73,4 +76,21 @@ async function logout(req, res) {
   }
 }
 
-module.exports = { register, login, logout };
+const deleteAccount = async (req, res) => {
+  const { uid } = req.user;
+
+  try {
+    await admin.auth().deleteUser(uid);
+    res.json({
+      message: "Account Deleted",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Failed to delete account",
+      serverMessage: error,
+    });
+  }
+};
+
+module.exports = { register, login, logout, deleteAccount };

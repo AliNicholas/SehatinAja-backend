@@ -26,9 +26,11 @@ jobs:
         env:
           FIREBASESERVICEACCOUNT: ${{ secrets.FIREBASESERVICEACCOUNT }}
           MY_ENV: ${{ secrets.MY_ENV }}
+          CLOUD_STORAGE_KEY: ${{ secrets.CLOUD_STORAGE_KEY }}
         run: |
           mkdir ./credentials
           echo "$FIREBASESERVICEACCOUNT" > ./credentials/firebaseServiceAccount.json
+          echo "$CLOUD_STORAGE_KEY" > ./credentials/cloud-storage.json
           echo "$MY_ENV" > ./.env
 
       - name: Authenticate with Google Cloud
