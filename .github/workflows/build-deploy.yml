@@ -37,6 +37,11 @@ jobs:
           project_id: ${{ env.PROJECT_ID }}
           service_account_key: ${{ secrets.GH_ACTIONS_KEY }}
 
+      - name: Configure Docker Client
+        run: |-
+          gcloud auth configure-docker --quiet
+          gcloud auth configure-docker gcr.io/sehatinaja-c7205 --quiet
+
       - name: Build and Push Container
         run: |-
           docker build -t "${{ env.IMAGE_NAME }}:${{ github.sha }}" ./
