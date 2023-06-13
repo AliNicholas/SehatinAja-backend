@@ -1,9 +1,7 @@
 FROM google/cloud-sdk:slim as builder
 WORKDIR /app
 COPY . /app
-ARG firebaseServiceAccount
-ARG env
-COPY /credentials/f /app/credentials
+COPY /credentials/firebaseServiceAccount.json /app/credentials/firebaseServiceAccount.json
 COPY .env /app/.env
 
 FROM node

@@ -22,18 +22,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Create credentials directory
-        run: mkdir ./credentials
-
+      - name: Save file from secret
         env:
           FIREBASESERVICEACCOUNT: ${{ secrets.FIREBASESERVICEACCOUNT }}
           MY_ENV: ${{ secrets.MY_ENV }}
-
-      - name: Copy firebase service account
-        run: cp $FIREBASESERVICEACCOUNT ./credentials/firebaseServiceAccount.json
-
-      - name: Copy .env file
-        run: cp $MY_ENV ./.env
+        run: |
+          echo "$FIREBASESERVICEACCOUNT" > ./credentials/firebaseServiceAccount.json
+          echo "$MY_ENV" > ./.env
 
       - name: Google Auth
         id: auth
