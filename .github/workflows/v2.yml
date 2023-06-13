@@ -27,6 +27,7 @@ jobs:
           FIREBASESERVICEACCOUNT: ${{ secrets.FIREBASESERVICEACCOUNT }}
           MY_ENV: ${{ secrets.MY_ENV }}
         run: |
+          mkdir ./credentials
           echo "$FIREBASESERVICEACCOUNT" > ./credentials/firebaseServiceAccount.json
           echo "$MY_ENV" > ./.env
 
