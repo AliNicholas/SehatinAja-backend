@@ -43,12 +43,6 @@ jobs:
           docker tag "${{ env.IMAGE_NAME }}:${{ github.sha }}" "gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
           docker push "gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
 
-      - name: Remove Credentials Folder
-        run: rm -rf credentials/
-
-      - name: Remove .env file
-        run: rm .env
-
       - name: Deploy to Cloud Run
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v0
