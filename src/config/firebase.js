@@ -3,7 +3,7 @@ const firebase = require("firebase/app");
 require("firebase/auth");
 
 // const serviceAccount = require("../../credentials/firebaseServiceAccount.json");
-const serviceAccount = secrets.FIREBASESERVICEACCOUNT;
+const serviceAccount = require("../../credentials/firebaseServiceAccount.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
