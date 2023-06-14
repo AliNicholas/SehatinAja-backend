@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const authRoute = require("./routes/authRoute");
+const userRoute = require("./routes/userRoute");
 const diseaseRoute = require("./routes/diseaseRoute");
 const doctorRoute = require("./routes/doctorRoute");
 const testRoute = require("./routes/testRoute");
@@ -13,6 +14,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(authRoute);
+app.use(userRoute);
 app.use(diseaseRoute);
 app.use(doctorRoute);
 app.use(testRoute);

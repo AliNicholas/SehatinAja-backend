@@ -6,14 +6,20 @@ const {
   updateUserById,
   uploadUserPhoto,
 } = require("../controllers/userController");
-const { authenticate } = require("../middleware/authMiddleware");
+const { authenticateAccessToken } = require("../middleware/authMiddleware");
+const { upload } = require("../middleware/multer");
 
 router.get("/users", getAllUsers);
 
-router.get("/users/:id", authenticate, getUserById);
+router.get("/users/user", authenticateAccessToken, getUserById);
 
-router.put("/users/:id", authenticate, updateUserById);
+router.put("/users/user", authenticateAccessToken, updateUserById);
 
-router.post("/users", authenticate, uploadUserPhoto);
+router.post(
+  "/users",
+  authenticateAccessToken,
+  upload.single("image"),
+  uploadUserPhoto
+);
 
 module.exports = router;

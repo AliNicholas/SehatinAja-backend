@@ -1,4 +1,5 @@
 const { admin, firebase } = require("../config/firebase");
+const { bucket, bucketName } = require("../config/cloud-storage");
 
 function getAllUsers(req, res) {
   admin
@@ -13,17 +14,17 @@ function getAllUsers(req, res) {
           photoUrl: user.photoURL || null,
         };
       });
-      res.json({ users });
+      res.json(users);
     });
   console.error(error);
   res.status(500).json({ error: "Something went wrong." });
 }
 
 async function getUserById(req, res) {
-  const { id } = req.params;
+  const { uid } = req.user;
 
   try {
-    const user = await admin.auth().getUser(id);
+    const user = await admin.auth().getUser(uid);
 
     const userData = {
       uid: user.uid,
@@ -41,7 +42,7 @@ async function getUserById(req, res) {
 
 function updateUserById(req, res) {
   const { email, password } = req.body;
-  const { id } = req.params;
+  const { uid } = req.user;
 
   const updateData = {
     email,
@@ -50,7 +51,7 @@ function updateUserById(req, res) {
 
   admin
     .auth()
-    .updateUser(id, updateData) // Use 'id' instead of 'uid'
+    .updateUser(uid, updateData) // Use 'id' instead of 'uid'
     .then((userRecord) => {
       console.log("Successfully updated user", userRecord.toJSON());
       res.json("Updated");
@@ -62,47 +63,41 @@ function updateUserById(req, res) {
 }
 
 async function uploadUserPhoto(req, res) {
-  const destination = `images/profile/${email}/${file.filename}`; // path to save in the bucket and the file name
-  const fileObject = cloudStorageConfig.bucket.file(destination);
-  const filePath = `./public/images/${file.filename}`; // path to acces images
-
   try {
-    const options = {
+    if (!req.file) {
+      res.status(400).json({ error: "No file uploaded." });
+      return;
+    }
+
+    // Simpan gambar ke Google Cloud Storage
+    const uniqueFilename = `${Date.now()}-${req.file.originalname}`;
+    const file = bucket.file(uniqueFilename);
+    const stream = file.createWriteStream({
       metadata: {
-        contentType: file.mimetype,
+        contentType: req.file.mimetype,
       },
-      predefinedAcl: "publicRead", // set public access control in Cloud SQL
-    };
-    // store photo to Cloud SQL
-    await new Promise((resolve, reject) => {
-      const readStream = fs.createReadStream(
-        `./public/images/${file.filename}`
-      );
-      const writeStream = fileObject.createWriteStream(options);
-
-      readStream.on("error", reject);
-      writeStream.on("error", reject);
-      writeStream.on("finish", resolve);
-
-      readStream.pipe(writeStream);
     });
-    // do delete file  in public/images directory after upload to Cloud SQL
-    fs.unlink(filePath, (err) => {
-      if (err) {
-        console.error(`Failed to delete file: ${err}`);
-      }
+
+    stream.on("error", (error) => {
+      console.error(error);
+      res.status(500).json({ error: "Failed to upload image." });
     });
-    //  if success Get the public URL
-    const publicUrl = `https://storage.googleapis.com/${cloudStorageConfig.bucketName}/${destination}`;
-    const photoUrl = {
-      photoUrl: publicUrl,
-    };
-    // if success update user photoURL in firebase by firebase_uid
-    await firebaseConfig.admin.auth().updateUser(firebase_uid, photoUrl);
-    return publicUrl;
+
+    stream.on("finish", async () => {
+      const imageUrl = `https://storage.googleapis.com/${bucketName}/${file.name}`;
+
+      const imageRef = await imagesCollection.add({ path: imageUrl });
+      const imageId = imageRef.id;
+
+      res
+        .status(200)
+        .json({ message: "Image uploaded successfully.", imageId });
+    });
+
+    stream.end(req.file.buffer);
   } catch (error) {
-    console.log(error);
-    return error;
+    console.error(error);
+    res.status(500).json({ error: "Failed to upload image." });
   }
 }
 

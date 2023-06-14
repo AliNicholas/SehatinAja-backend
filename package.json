@@ -2,9 +2,8 @@
   "name": "sehatinaja",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "starts": "nodemon src/server.js",
     "start": "nodemon src/server.js"
   },
   "keywords": [],
