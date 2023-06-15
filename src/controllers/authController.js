@@ -76,7 +76,7 @@ async function logout(req, res) {
   }
 }
 
-const deleteAccount = async (req, res) => {
+async function deleteAccount(req, res) {
   const { uid } = req.user;
 
   try {
@@ -91,6 +91,6 @@ const deleteAccount = async (req, res) => {
       serverMessage: error,
     });
   }
-};
+}
 
 module.exports = { register, login, logout, deleteAccount };

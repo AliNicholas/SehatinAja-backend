@@ -1,4 +1,4 @@
-const { app, admin } = require("../config/firebase");
+const { app, admin, db } = require("../config/firebase");
 
 async function addDoctorCategory(req, res) {
   try {
