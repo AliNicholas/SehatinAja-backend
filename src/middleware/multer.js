@@ -1,13 +1,22 @@
-const Multer = require("multer");
+const multer = require("multer");
 
-const storage = Multer.memoryStorage();
-const limits = {
-  fileSize: 5 * 1024 * 1024, // Batasan ukuran file (5MB)
-};
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./images");
+  },
+  filename: (req, file, cb) => {
+    const timestamp = new Date().getTime(); // get time stamp
+    const { originalname } = file; // get filename
+    cb(null, `${timestamp}-${originalname}`); // save filename with this format
+  },
+});
 
-const upload = Multer({
+const upload = multer({
+  // storage: multer.memoryStorage(),
   storage,
-  limits,
+  limits: {
+    fileSize: 5 * 1000 * 1000,
+  },
 });
 
 module.exports = { upload };

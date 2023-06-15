@@ -4,7 +4,6 @@ const authRoute = require("./routes/authRoute");
 const userRoute = require("./routes/userRoute");
 const diseaseRoute = require("./routes/diseaseRoute");
 const doctorRoute = require("./routes/doctorRoute");
-const testRoute = require("./routes/testRoute");
 
 const app = express();
 app.use(express.json());
@@ -17,7 +16,6 @@ app.use(authRoute);
 app.use(userRoute);
 app.use(diseaseRoute);
 app.use(doctorRoute);
-app.use(testRoute);
 
 app.use((err, req, res, next) => {
   // err handling

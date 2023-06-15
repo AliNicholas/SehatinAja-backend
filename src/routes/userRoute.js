@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getAllUsers,
   getUserById,
   updateUserById,
   uploadUserPhoto,
@@ -9,11 +8,9 @@ const {
 const { authenticateAccessToken } = require("../middleware/authMiddleware");
 const { upload } = require("../middleware/multer");
 
-router.get("/users", getAllUsers);
+router.get("/users", authenticateAccessToken, getUserById);
 
-router.get("/users/user", authenticateAccessToken, getUserById);
-
-router.put("/users/user", authenticateAccessToken, updateUserById);
+router.put("/users", authenticateAccessToken, updateUserById);
 
 router.post(
   "/users",

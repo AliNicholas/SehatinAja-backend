@@ -9,9 +9,7 @@ const storage = new Storage({
 
 const bucketName = process.env.CS_BUCKET_NAME;
 
-const bucket = storage.bucket(bucketName); // my bucket name in the cloud
-
 module.exports = {
-  bucket,
+  storage,
   bucketName,
 };
