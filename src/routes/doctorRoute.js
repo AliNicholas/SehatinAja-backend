@@ -22,8 +22,8 @@ router.delete("/doctor-categories/:id", deleteDoctorCategoryById);
 router.post("/doctors", addDoctor);
 router.get("/doctors", getAllDoctors);
 router.get("/doctors/:categoryId/:doctorId", getDoctorById);
-router.delete("/doctors/:categoryId/:doctorId", updateDoctorById);
-router.put("/doctors/:categoryId/:doctorId", deleteDoctorById);
+router.put("/doctors/:categoryId/:doctorId", updateDoctorById);
+router.delete("/doctors/:categoryId/:doctorId", deleteDoctorById);
 router.get("/doctors/:categoryId", getAllDoctorsInCategory);
 
 module.exports = router;

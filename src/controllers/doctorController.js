@@ -180,8 +180,6 @@ async function getDoctorById(req, res) {
       const doctor = {
         name: docRef.data().name,
         message: docRef.data().message,
-        caused: docRef.data().caused,
-        prevention: docRef.data().prevention,
       };
       res.status(200).json(doctor);
     } else {
@@ -257,8 +255,6 @@ async function getAllDoctorsInCategory(req, res) {
         id: doc.id,
         name: doc.data().name,
         message: doc.data().message,
-        caused: doc.data().caused,
-        prevention: doc.data().prevention,
       };
       doctors.push(doctor);
     });
